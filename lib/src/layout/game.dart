@@ -1,11 +1,14 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:tictactoe/src/widget/footer_button.dart';
 import 'package:tictactoe/src/widget/grid.dart';
 
-// TODO gesture detector: 360 draggable scroll view for grid
+// TODO center matrix onto screen button
+// TODO fix: on startup, InteractiveView scale / child should be auto configured / centered
+// ^ look into callbacks / controller
+// TODO when grid goes off screen, create a rim-hugging icon that shows where it is (smash bros)
 // TODO win state
 // TODO void cells
 
@@ -19,20 +22,27 @@ class Game extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: secondaryColor,
+          title: const Text('TTT'),
+        ),
         backgroundColor: secondaryColor,
-        body: Column(children: [_buildBody(), _buildFooter()]));
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildBody(MediaQuery.of(context).size),
+              _buildFooter()
+            ]));
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(Size viewSize) {
     return Expanded(
-        child: Center(
-            child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [Grid(key: gridState)])))));
+        child: InteractiveViewer(
+            boundaryMargin: const EdgeInsets.all(double.infinity),
+            maxScale: 1.6,
+            minScale: 0.6,
+            constrained: false,
+            child: Grid(key: gridState)));
   }
 
   Widget _buildFooter() {
@@ -42,9 +52,8 @@ class Game extends StatelessWidget {
         color: secondaryColor,
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           FooterButton(
-              // TODO import <function,icon> pair and dynamically construct footer
               padding: footerButtonPadding,
-              icon: const Icon(Icons.arrow_downward, color: primaryColor),
+              icon: const Icon(Icons.remove, color: primaryColor),
               onTap: _shrinkGrid),
           FooterButton(
               padding: footerButtonPadding,
@@ -52,7 +61,11 @@ class Game extends StatelessWidget {
               onTap: _refreshGrid),
           FooterButton(
               padding: footerButtonPadding,
-              icon: const Icon(Icons.arrow_upward, color: primaryColor),
+              icon: const Icon(Icons.center_focus_strong, color: primaryColor),
+              onTap: () {}), // TODO
+          FooterButton(
+              padding: footerButtonPadding,
+              icon: const Icon(Icons.add, color: primaryColor),
               onTap: _growGrid)
         ]));
   }

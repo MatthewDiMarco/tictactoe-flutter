@@ -23,16 +23,18 @@ class GridState extends State<Grid> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-          _matrix.length,
-          (row) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                    _matrix[row].length, (col) => _buildTile(row, col)),
-              )),
-    );
+    return Container(
+        color: const Color.fromARGB(255, 62, 62, 62),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+              _matrix.length,
+              (row) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                        _matrix[row].length, (col) => _buildTile(row, col)),
+                  )),
+        ));
   }
 
   void resetGrid() {
@@ -43,7 +45,7 @@ class GridState extends State<Grid> {
     final numHorizontalTiles = _matrix.length + amount;
     final numVerticalTiles = _matrix[0].length + amount;
 
-    if (numHorizontalTiles >= 1 && numVerticalTiles >= 1) {
+    if (numHorizontalTiles >= 3 && numVerticalTiles >= 3) {
       _setGrid(numHorizontalTiles, numVerticalTiles);
     }
   }
