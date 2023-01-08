@@ -1,11 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:tictactoe/src/widget/footer_button.dart';
 import 'package:tictactoe/src/widget/grid.dart';
 
-// TODO matrix resize limit function of window dimensions (MediaQuery)
+// TODO gesture detector: 360 draggable scroll view for grid
 // TODO win state
 // TODO void cells
 
 class Game extends StatelessWidget {
+  static const primaryColor = Color.fromARGB(255, 218, 218, 218);
+  static const secondaryColor = Color.fromARGB(255, 62, 62, 62);
   final gridState = GlobalKey<GridState>();
 
   Game({super.key});
@@ -13,37 +19,56 @@ class Game extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 62, 62, 62),
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Grid(key: gridState)]),
-        persistentFooterButtons: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            IconButton(
-                icon: const Icon(Icons.exposure_minus_1,
-                    color: Color.fromARGB(255, 218, 218, 218)),
-                iconSize: 48,
-                onPressed: () {
-                  final state = gridState.currentState!;
-                  state.growGrid(-1);
-                }),
-            IconButton(
-                icon: const Icon(Icons.replay,
-                    color: Color.fromARGB(255, 218, 218, 218)),
-                iconSize: 48,
-                onPressed: () {
-                  final state = gridState.currentState!;
-                  state.resetGrid();
-                }),
-            IconButton(
-                icon: const Icon(Icons.exposure_plus_1,
-                    color: Color.fromARGB(255, 218, 218, 218)),
-                iconSize: 48,
-                onPressed: () {
-                  final state = gridState.currentState!;
-                  state.growGrid(1);
-                })
-          ])
-        ]);
+        backgroundColor: secondaryColor,
+        body: Column(children: [_buildBody(), _buildFooter()]));
+  }
+
+  Widget _buildBody() {
+    return Expanded(
+        child: Center(
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [Grid(key: gridState)])))));
+  }
+
+  Widget _buildFooter() {
+    const footerButtonPadding = EdgeInsets.all(8.0);
+
+    return Ink(
+        color: secondaryColor,
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          FooterButton(
+              // TODO import <function,icon> pair and dynamically construct footer
+              padding: footerButtonPadding,
+              icon: const Icon(Icons.arrow_downward, color: primaryColor),
+              onTap: _shrinkGrid),
+          FooterButton(
+              padding: footerButtonPadding,
+              icon: const Icon(Icons.refresh, color: primaryColor),
+              onTap: _refreshGrid),
+          FooterButton(
+              padding: footerButtonPadding,
+              icon: const Icon(Icons.arrow_upward, color: primaryColor),
+              onTap: _growGrid)
+        ]));
+  }
+
+  void _shrinkGrid() {
+    final state = gridState.currentState!;
+    state.growGrid(-1);
+  }
+
+  void _growGrid() {
+    final state = gridState.currentState!;
+    state.growGrid(1);
+  }
+
+  void _refreshGrid() {
+    final state = gridState.currentState!;
+    state.resetGrid();
   }
 }

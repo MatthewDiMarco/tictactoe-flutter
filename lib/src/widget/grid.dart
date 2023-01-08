@@ -10,31 +10,15 @@ class Grid extends StatefulWidget {
 
 class GridState extends State<Grid> {
   static const defaultMatrixSize = 3;
+  static const tileSize = Size(80, 80);
+  static const tileMargin = EdgeInsets.all(6);
   final _matrix = <List<Tile>>[];
   final _moves = <MapEntry>[];
-
-  void resetGrid() {
-    growGrid(0);
-  }
-
-  void growGrid(int amount) {
-    final newWidth = _matrix.length + amount;
-    final newHeight = _matrix[0].length + amount;
-    setGrid(newWidth, newHeight);
-  }
-
-  void setGrid(int width, int height) {
-    setState(() {
-      _matrix.clear();
-      _matrix.addAll(List.generate(
-          width, (index) => List.generate(height, (index) => Tile.empty)));
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    setGrid(defaultMatrixSize, defaultMatrixSize);
+    _setGrid(defaultMatrixSize, defaultMatrixSize);
   }
 
   @override
@@ -51,14 +35,31 @@ class GridState extends State<Grid> {
     );
   }
 
+  void resetGrid() {
+    growGrid(0);
+  }
+
+  void growGrid(int amount) {
+    final numHorizontalTiles = _matrix.length + amount;
+    final numVerticalTiles = _matrix[0].length + amount;
+
+    if (numHorizontalTiles >= 1 && numVerticalTiles >= 1) {
+      _setGrid(numHorizontalTiles, numVerticalTiles);
+    }
+  }
+
   Widget _buildTile(int row, int col) {
     return Container(
-      margin: const EdgeInsets.all(6),
+      margin: tileMargin,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              minimumSize: const Size(80, 80),
+              minimumSize: tileSize,
               foregroundColor: const Color.fromARGB(255, 20, 20, 20),
-              backgroundColor: const Color.fromARGB(255, 218, 218, 218)),
+              backgroundColor: _matrix[row][col].isAvailable()
+                  ? const Color.fromARGB(255, 218, 218, 218)
+                  : _matrix[row][col] == Tile.x
+                      ? Colors.redAccent
+                      : Colors.greenAccent),
           child: Text(_matrix[row][col].displayText,
               style: TextStyle(
                   fontSize: 48,
@@ -94,6 +95,14 @@ class GridState extends State<Grid> {
             : Tile.empty;
       });
     }
+  }
+
+  void _setGrid(int width, int height) {
+    setState(() {
+      _matrix.clear();
+      _matrix.addAll(List.generate(
+          width, (index) => List.generate(height, (index) => Tile.empty)));
+    });
   }
 
   Tile _getLastMove() {
