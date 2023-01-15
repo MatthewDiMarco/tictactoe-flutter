@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tictactoe/src/layout/game.dart';
-import 'package:tictactoe/src/widget/game_view.dart';
+import 'package:tictactoe/src/screen/game_screen.dart';
+import 'package:tictactoe/theme.dart';
 import 'package:window_size/window_size.dart';
 import 'dart:io';
 
@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: GameView());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: appTheme,
+        home: const GameScreen());
   }
 }
