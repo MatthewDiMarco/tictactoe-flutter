@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tictactoe/src/layout/game.dart';
+import 'package:tictactoe/src/widget/game_view.dart';
 import 'package:window_size/window_size.dart';
 import 'dart:io';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: Game());
+    return const MaterialApp(
+        debugShowCheckedModeBanner: false, home: GameView());
   }
 }

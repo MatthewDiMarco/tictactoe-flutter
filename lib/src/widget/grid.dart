@@ -12,7 +12,7 @@ class GridState extends State<Grid> {
   static const defaultMatrixSize = 3;
   static const tileSize = Size(80, 80);
   static const tileMargin = EdgeInsets.all(6);
-  final _matrix = <List<Tile>>[];
+  final _matrix = <List<Tile>>[]; // TODO: convert this to matrix widget?
   final _moves = <MapEntry>[];
 
   @override
