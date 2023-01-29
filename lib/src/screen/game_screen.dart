@@ -4,11 +4,6 @@ import 'package:tictactoe/src/widget/grid.dart';
 import 'package:tictactoe/src/widget/icon_menu.dart';
 import 'dart:math';
 
-// TODO bug fix: grid lerps on start up
-// TODO win state
-// TODO void cells
-// TODO convert global key to controller for grid
-
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
@@ -134,7 +129,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   // translating it, accounting for the scale and the child's own length.
   double _calcOffsetToCenterChild(
       double screenLength, double childLength, double scale) {
-    return ((screenLength / scale) / 2) - ((childLength) / 2);
+    return ((screenLength / scale) / 2) - (childLength / 2);
   }
 
   @override
