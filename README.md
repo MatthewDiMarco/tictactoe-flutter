@@ -1,6 +1,6 @@
 # tictactoe
 
-A new Flutter project.
+![Alt Text](demo.gif)
 
 ## Getting Started
 
